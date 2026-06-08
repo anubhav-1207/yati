@@ -43,10 +43,16 @@ class TokenType(Enum):
 
     #---Multi Character Tokens---------------
     EQEQ = auto()
+    NEQ = auto()
     STARSTAR = auto()
     GTE = auto()
     LTE = auto()
     BANGEQ = auto()
+
+    #---OPERATORS----------------------------
+    AND = auto()
+    OR = auto()
+    NOT = auto()
 
     EOF = auto()
 
@@ -69,5 +75,5 @@ class Token:
         self.col = col 
     
     def __repr__(self):
-        return f"{self.token_type} = lexeme: {self.lexeme}, {self.literal}, line:col {self.line}:{self.col}"
+        return f"TOKEN({self.token_type}, {self.lexeme}, {self.line}:{self.col})"
 #---------------------------------------------------------
