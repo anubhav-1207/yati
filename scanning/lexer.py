@@ -53,7 +53,7 @@ class Lexer:
                 #---Spaces-------------------------------
                 case " ":
                     self.advance()
-                    self.col += 1
+                    self.col += 1 
                 
                 #---Newlines-----------------------------
                 case "\n":
