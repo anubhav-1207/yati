@@ -65,6 +65,9 @@ keywords = (
     'if','else','elif',
     'break','return'
 )
+ALPHABETS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" #This contains the _ character because it is a valid character for identifiers
+NUMBERS = "0123456789." #Contains the . because numbers can have .
+SYMBOLS = ",./<>?;':\"{}|[]()-=+!@#$%^&*()~`\ " # _ is not here
 
 #---------------------------------------------------------
 class Token:
@@ -75,5 +78,5 @@ class Token:
         self.col = col 
     
     def __repr__(self):
-        return f"TOKEN({self.token_type}, {self.lexeme}, {self.line}:{self.col})"
+        return f"{self.token_type}, {self.lexeme}, {self.line}:{self.col}"
 #---------------------------------------------------------
