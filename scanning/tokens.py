@@ -54,6 +54,7 @@ class TokenType(Enum):
     OR = auto()
     NOT = auto()
 
+    #---EOF----------------------------------
     EOF = auto()
 
 
