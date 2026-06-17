@@ -63,7 +63,6 @@ class Lexer:
                 #---Spaces-------------------------------
                 case " ":
                     self.advance()
-                    self.col += 1 
                 
                 #---Newlines-----------------------------
                 case "\n":
@@ -77,91 +76,105 @@ class Lexer:
                 
                 #   ** and *
                 case "*":
+                    column = self.col
                     if self.peek() == '*':
-                        self.add(TokenType.STARSTAR, '**', self.line, self.col)
+                        self.add(TokenType.STARSTAR, '**', self.line, column)
                         self.advance();self.advance()
                     else:
-                        self.add(TokenType.STAR,'*',self.line, self.col)
+                        self.add(TokenType.STAR,'*',self.line, column)
                         self.advance()
                 
                 #   == and =
                 case "=":
+                    column = self.col
                     if self.peek() == '=':
-                        self.add(TokenType.EQEQ,'==',self.line,self.col)
+                        self.add(TokenType.EQEQ,'==',self.line,column)
                         self.advance();self.advance()
                     else:
-                        self.add(TokenType.EQ,'=',self.line,self.col)
+                        self.add(TokenType.EQ,'=',self.line,column)
                         self.advance()
                 
                 #   >= and >
                 case ">":
+                    column = self.col
                     if self.peek() == '=':
-                        self.add(TokenType.GTE,'>=',self.line,self.col)
+                        self.add(TokenType.GTE,'>=',self.line,column)
                         self.advance();self.advance()
                     else:
-                        self.add(TokenType.GT,'>',self.line,self.col)
+                        self.add(TokenType.GT,'>',self.line,column)
                         self.advance()
 
                 #   <= and <
                 case "<":
+                    column = self.col
                     if self.peek() == '=':
-                        self.add(TokenType.LTE,'<=',self.line,self.col)
+                        self.add(TokenType.LTE,'<=',self.line,column)
                         self.advance();self.advance()
                     else:
-                        self.add(TokenType.LT,'<',self.line,self.col)
+                        self.add(TokenType.LT,'<',self.line,column)
                         self.advance()
                 
                 #   != and !
                 case "!":
+                    column = self.col
                     if self.peek() == '=':
-                        self.add(TokenType.NEQ,'!=',self.line,self.col)
+                        self.add(TokenType.NEQ,'!=',self.line,column)
                         self.advance();self.advance()
                     else:
-                        self.add(TokenType.NOT,'!',self.line,self.col)
+                        self.add(TokenType.NOT,'!',self.line,column)
                         self.advance()
 
                 #   / and comments
                 case "/":
+                    column = self.col
                     if self.peek() == '/':
                         while self.current_char() and self.current_char() != '\n':
                             self.advance()
                     else:
-                        self.add(TokenType.SLASH,'/',self.line,self.col)
+                        self.add(TokenType.SLASH,'/',self.line,column)
                         self.advance()
                 
                 #========================================================
                 #---Single Character Tokens------------------------------
                 #========================================================
                 case "+":
-                    self.add(TokenType.PLUS,'+',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.PLUS,'+',self.line,column)
                     self.advance()
                 
                 case "-":
-                    self.add(TokenType.MINUS,'-',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.MINUS,'-',self.line,column)
                     self.advance()
                 
                 case '(':
-                    self.add(TokenType.LPAREN,'(',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.LPAREN,'(',self.line,column)
                     self.advance()
                 
                 case ')':
-                    self.add(TokenType.RPAREN,')',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.RPAREN,')',self.line,column)
                     self.advance()
 
                 case '[':
-                    self.add(TokenType.LBRACKET,'[',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.LBRACKET,'[',self.line,column)
                     self.advance()
                 
                 case ']':
-                    self.add(TokenType.RBRACKET,']',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.RBRACKET,']',self.line,column)
                     self.advance()
 
                 case '{':
-                    self.add(TokenType.LBRACE,'{',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.LBRACE,'{',self.line,column)
                     self.advance()
 
                 case '}':
-                    self.add(TokenType.RBRACE,'}',self.line,self.col)
+                    column = self.col
+                    self.add(TokenType.RBRACE,'}',self.line,column)
                     self.advance()
 
                 
@@ -171,6 +184,8 @@ class Lexer:
                 
                 #---Keywords & Idents-----------------------------
                 case c if c in ALPHABETS:
+                    
+                    column = self.col
                     result = []
                     result.append(c)
                     self.advance()
@@ -182,16 +197,17 @@ class Lexer:
                     text = "".join(result)
 
                     if text in keywords:
-                        self.add(TokenType.KEYWORD,text,self.line,self.col)
+                        self.add(TokenType.KEYWORD,text,self.line,column)
                     
                     elif text in ("True","False"):
-                        self.add(TokenType.BOOLEAN,text,self.line,self.col)
+                        self.add(TokenType.BOOLEAN,text,self.line,column)
                     
                     else:
-                        self.add(TokenType.IDENTIFIER,text,self.line,self.col)
+                        self.add(TokenType.IDENTIFIER,text,self.line,column)
                 
                 #---Numbers-----------------------------------------------
                 case c if c in NUMBERS:
+                    column = self.col
                     result = []
                     result.append(c)
                     self.advance()
@@ -206,24 +222,24 @@ class Lexer:
                         if text.startswith("."):
                             decimal = "0"
                             decimal += text
-                            self.add(TokenType.FLOAT,decimal,self.line,self.col)
+                            self.add(TokenType.FLOAT,decimal,self.line,column)
                         elif text.endswith("."):
                             decimal = "0"
                             decimal += text
-                            self.add(TokenType.FLOAT,decimal,self.line,self.col)
+                            self.add(TokenType.FLOAT,decimal,self.line,column)
                         
                         else:
-                            self.add(TokenType.FLOAT,text,self.line,self.col)
+                            self.add(TokenType.FLOAT,text,self.line,column)
 
                     elif text.count(".") == 0:
-                        self.add(TokenType.INTEGER,text,self.line,self.col)
+                        self.add(TokenType.INTEGER,text,self.line,column)
                     else:
                         raise Exception("Invalid number lmao")
                 
                 #---Strings----------------------------
                 case c if c in ('"',"'"):
-                    c = c 
                     self.advance()
+                    column = self.col
 
                     string = ''
 
@@ -232,8 +248,7 @@ class Lexer:
                         self.advance()
                     
                     self.advance()
-                    self.add(TokenType.STRING,string,self.line,self.col) 
+                    self.add(TokenType.STRING,string,self.line,column) 
 
         self.add(TokenType.EOF,'',self.line,self.col)
         return self.tokens
-
