@@ -5,7 +5,7 @@
 #This is the first stage of the interpreter.
 #===========================================================================================
 import typing as t 
-from tokens import Token, TokenType, keywords, ALPHABETS, NUMBERS, SYMBOLS
+from .tokens import Token, TokenType, keywords, ALPHABETS, NUMBERS, SYMBOLS
 
 
 #---Lexer Class-----------------------------------------------------------------------------
