@@ -74,6 +74,11 @@ class Lexer:
                 #---Multi-Char Tokens------------------------------------
                 #========================================================
                 
+                #=============================!!!!!!!!!!!!!!!!!!======================================
+                #self.col is stored in 'column' to append the starting column of the token 
+                #=====================================================================================
+                
+                
                 #   ** and *
                 case "*":
                     column = self.col
@@ -179,7 +184,7 @@ class Lexer:
 
                 
                 #========================================================
-                #---Reading Words & Numbers----------------
+                #---Reading Words & Numbers----------------------
                 #========================================================
                 
                 #---Keywords & Idents-----------------------------
@@ -187,6 +192,8 @@ class Lexer:
                     
                     column = self.col
                     result = []
+                    
+                    # consume first letter
                     result.append(c)
                     self.advance()
 
@@ -194,11 +201,13 @@ class Lexer:
                         result.append(self.current_char())
                         self.advance()
                     
+                    # array -> string
                     text = "".join(result)
 
                     if text in keywords:
                         self.add(TokenType.KEYWORD,text,self.line,column)
                     
+                    # Boolean Operators
                     elif text in ("True","False"):
                         self.add(TokenType.BOOLEAN,text,self.line,column)
                     
@@ -209,6 +218,8 @@ class Lexer:
                 case c if c in NUMBERS:
                     column = self.col
                     result = []
+                    
+                    # consume first letter
                     result.append(c)
                     self.advance()
 
@@ -216,13 +227,18 @@ class Lexer:
                         result.append(self.current_char())
                         self.advance()
                     
+                    # array -> string
                     text = "".join(result)
 
+
                     if text.count(".") == 1:
+                        # To make .123 -> 0.123
                         if text.startswith("."):
                             decimal = "0"
                             decimal += text
                             self.add(TokenType.FLOAT,decimal,self.line,column)
+                        
+                        # To make 123. -> 123.0
                         elif text.endswith("."):
                             decimal = "0"
                             decimal += text
@@ -238,6 +254,8 @@ class Lexer:
                 
                 #---Strings----------------------------
                 case c if c in ('"',"'"):
+                    
+                    # skip the ' or "
                     self.advance()
                     column = self.col
 
@@ -250,5 +268,6 @@ class Lexer:
                     self.advance()
                     self.add(TokenType.STRING,string,self.line,column) 
 
+        # Adding an EOF token to signify END OF FILE
         self.add(TokenType.EOF,'',self.line,self.col)
         return self.tokens
