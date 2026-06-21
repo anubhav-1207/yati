@@ -4,9 +4,13 @@
 #
 #This is the first stage of the interpreter.
 #===========================================================================================
+import sys
 import typing as t 
 from .tokens import Token, TokenType, keywords, ALPHABETS, NUMBERS, SYMBOLS
+from .errors import *
 
+#---Error----------------------------------------------------------------------------------
+exceptions_list = [] # To be raised after the lexer finished the job
 
 #---Lexer Class-----------------------------------------------------------------------------
 class Lexer:
@@ -197,7 +201,7 @@ class Lexer:
                     result.append(c)
                     self.advance()
 
-                    while self.current_char() is not None and self.current_char() in ALPHABETS:
+                    while (self.current_char() is not None) and ((self.current_char() in ALPHABETS) or (self.current_char() in NUMBERS)):
                         result.append(self.current_char())
                         self.advance()
                     
@@ -265,9 +269,18 @@ class Lexer:
                         string += self.current_char()
                         self.advance()
                     
-                    self.advance()
+                    if self.current_char() in ('"',"'"):
+                        self.advance()
+                    else:
+                        exceptions_list.append(UnterminatedStringLiteral(self.line,self.col))
+                        
                     self.add(TokenType.STRING,string,self.line,column) 
-
+                
+                case _ :
+                    exceptions_list.append(InvalidTokenError(self.line,self.col,self.current_char()))
+                    self.advance()
+        
+        print(exceptions_list)
         # Adding an EOF token to signify END OF FILE
         self.add(TokenType.EOF,'',self.line,self.col)
         return self.tokens
