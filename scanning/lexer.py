@@ -254,7 +254,7 @@ class Lexer:
                     elif text.count(".") == 0:
                         self.add(TokenType.INTEGER,text,self.line,column)
                     else:
-                        raise Exception("Invalid number lmao")
+                        exceptions_list.append(InvalidFloatFormat(self.line,self.col,text))
                 
                 #---Strings----------------------------
                 case c if c in ('"',"'"):
@@ -269,7 +269,7 @@ class Lexer:
                         string += self.current_char()
                         self.advance()
                     
-                    if self.current_char() in ('"',"'"):
+                    if self.current_char() == c:
                         self.advance()
                     else:
                         exceptions_list.append(UnterminatedStringLiteral(self.line,self.col))
@@ -278,7 +278,8 @@ class Lexer:
                 
                 case _ :
                     exceptions_list.append(InvalidTokenError(self.line,self.col,self.current_char()))
-                    self.advance()
+                    # self.advance()
+                    raise InvalidTokenError(self.line,self.col,self.current_char())
         
         print(exceptions_list)
         # Adding an EOF token to signify END OF FILE
