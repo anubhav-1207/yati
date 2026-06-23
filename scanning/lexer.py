@@ -1,7 +1,6 @@
 #lexer.py 
 #===========================================================================================
 #Goes through each character one by one , and emits the corresponding tokens.
-#
 #This is the first stage of the interpreter.
 #===========================================================================================
 import sys
@@ -11,15 +10,16 @@ from .errors import *
 
 #---Error----------------------------------------------------------------------------------
 exceptions_list = [] # To be raised after the lexer finished the job
+#------------------------------------------------------------------------------------------
 
 #---Lexer Class-----------------------------------------------------------------------------
 class Lexer:
     def __init__(self,source):
         self.source = source 
         self.pos = 0 # Initialising the pointer.
-        self.col = 1
+        self.col = 1 
         self.line = 1
-        self.tokens = []        
+        self.tokens = []
 
 
     #---Helper Methods----------------------------------------------------------------------
@@ -55,14 +55,13 @@ class Lexer:
         self.tokens.append(Token(token_type, lexeme, line, col))
     
 
-
-    
     #---Tokenising Method---------------------------------------------------------------------
     def tokenise(self):
         """Visits the characters and matches patterns."""
         while self.current_char() and self.current_char() is not None:
             char = self.current_char()
 
+            ########## Match cases instead of if/elif chain
             match char:
                 #---Spaces-------------------------------
                 case " ":
