@@ -280,7 +280,8 @@ class Lexer:
                     # self.advance()
                     raise InvalidTokenError(self.line,self.col,self.current_char())
         
-        print(exceptions_list)
+        # print(exceptions_list)
+        
         # Adding an EOF token to signify END OF FILE
         self.add(TokenType.EOF,'',self.line,self.col)
         return self.tokens

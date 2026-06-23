@@ -60,6 +60,7 @@ class TokenType(Enum):
 
 #---------------------------------------------------------
 keywords = (
+    'var','const',
     'str','int','bool','float',
     'stdout','stdin',
     'while','for',
@@ -68,7 +69,7 @@ keywords = (
 )
 ALPHABETS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_" #This contains the _ character because it is a valid character for identifiers
 NUMBERS = "0123456789." #Contains the . because numbers can have .
-SYMBOLS = ",./<>?;':\"{}|[]()-=+!@#$%^&*()~`\ " # _ is not here
+SYMBOLS = """ !@#$%^&*()_+~`-={}[]<>,.?/:;' " """
 
 #---------------------------------------------------------
 class Token:
